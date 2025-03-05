@@ -170,6 +170,12 @@ if(BUILD_PYTHON_BINDINGS)
   set_target_properties(small_gicp_python PROPERTIES OUTPUT_NAME small_gicp)
 endif()
 
+find_package(catkin)
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES small_gicp
+)
+
 ###############
 ## Benchmark ##
 ###############
