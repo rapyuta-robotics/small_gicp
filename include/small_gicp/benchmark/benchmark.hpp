@@ -115,10 +115,10 @@ public:
   }
 
   template <typename PointCloud>
-  std::vector<std::shared_ptr<PointCloud>> convert(bool release = false) {
-    std::vector<std::shared_ptr<PointCloud>> converted(points.size());
+  std::vector<boost::shared_ptr<PointCloud>> convert(bool release = false) {
+    std::vector<boost::shared_ptr<PointCloud>> converted(points.size());
     std::transform(points.begin(), points.end(), converted.begin(), [=](auto& raw_points) {
-      auto points = std::make_shared<PointCloud>();
+      auto points = boost::make_shared<PointCloud>();
       traits::resize(*points, raw_points.size());
       for (size_t i = 0; i < raw_points.size(); i++) {
         traits::set_point(*points, i, raw_points[i].template cast<double>());

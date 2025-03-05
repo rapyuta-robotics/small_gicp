@@ -28,7 +28,7 @@ public:
 
 class OdometryEstimation {
 public:
-  using Ptr = std::shared_ptr<OdometryEstimation>;
+  using Ptr = boost::shared_ptr<OdometryEstimation>;
 
   OdometryEstimation(const OdometryEstimationParams& params) : params(params) {}
   virtual ~OdometryEstimation() = default;

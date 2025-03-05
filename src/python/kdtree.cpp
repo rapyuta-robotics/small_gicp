@@ -16,21 +16,21 @@ using namespace small_gicp;
 
 void define_kdtree(py::module& m) {
   // KdTree
-  py::class_<KdTree<PointCloud>, std::shared_ptr<KdTree<PointCloud>>>(m, "KdTree")  //
+  py::class_<KdTree<PointCloud>, boost::shared_ptr<KdTree<PointCloud>>>(m, "KdTree")  //
     .def(
       py::init([](const Eigen::MatrixXd& points_numpy, int num_threads) {
         if (points_numpy.cols() != 3 && points_numpy.cols() != 4) {
           throw std::invalid_argument("points must have shape (n, 3) or (n, 4)");
         }
 
-        auto points = std::make_shared<PointCloud>();
+        auto points = boost::make_shared<PointCloud>();
         points->resize(points_numpy.rows());
 
         for (int i = 0; i < points_numpy.rows(); i++) {
           points->point(i) << points_numpy(i, 0), points_numpy(i, 1), points_numpy(i, 2), 1.0;
         }
 
-        return std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
+        return boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
       }),
       py::arg("points"),
       py::arg("num_threads") = 1,
@@ -48,7 +48,7 @@ void define_kdtree(py::module& m) {
        )""")
 
     .def(
-      py::init([](const PointCloud::ConstPtr& points, int num_threads) { return std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads)); }),
+      py::init([](const PointCloud::ConstPtr& points, int num_threads) { return boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads)); }),
       py::arg("points"),
       py::arg("num_threads") = 1,
       R"""(

@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 #endif
 
   KittiDataset kitti(dataset_path, 1);
-  auto raw_points = std::make_shared<PointCloud>(kitti.points[0]);
+  auto raw_points = boost::make_shared<PointCloud>(kitti.points[0]);
   std::cout << "num_raw_points=" << raw_points->size() << std::endl;
 
   const auto search_voxel_resolution = [&](size_t target_num_points) {

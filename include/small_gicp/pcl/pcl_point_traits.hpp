@@ -13,7 +13,7 @@ namespace traits {
 
 template <typename PointType>
 struct Traits<pcl::PointCloud<PointType>> {
-  static_assert(std::is_same_v<pcl::shared_ptr<void>, std::shared_ptr<void>>, "Old PCL version detected. Please update PCL to 1.11 or later.");
+  static_assert(std::is_same_v<pcl::shared_ptr<void>, boost::shared_ptr<void>>, "Old PCL version detected. Please update PCL to 1.11 or later.");
 
   using Points = pcl::PointCloud<PointType>;
 

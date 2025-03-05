@@ -44,7 +44,7 @@ void RegistrationPCL<PointSource, PointTarget>::setInputSource(const PointCloudS
   }
 
   pcl::Registration<PointSource, PointTarget, Scalar>::setInputSource(cloud);
-  source_tree_ = std::make_shared<KdTree<pcl::PointCloud<PointSource>>>(input_, KdTreeBuilderOMP(num_threads_));
+  source_tree_ = boost::make_shared<KdTree<pcl::PointCloud<PointSource>>>(input_, KdTreeBuilderOMP(num_threads_));
   source_covs_.clear();
   source_voxelmap_.reset();
 }
@@ -56,7 +56,7 @@ void RegistrationPCL<PointSource, PointTarget>::setInputTarget(const PointCloudT
   }
 
   pcl::Registration<PointSource, PointTarget, Scalar>::setInputTarget(cloud);
-  target_tree_ = std::make_shared<KdTree<pcl::PointCloud<PointTarget>>>(target_, KdTreeBuilderOMP(num_threads_));
+  target_tree_ = boost::make_shared<KdTree<pcl::PointCloud<PointTarget>>>(target_, KdTreeBuilderOMP(num_threads_));
   target_covs_.clear();
   target_voxelmap_.reset();
 }
@@ -226,11 +226,11 @@ void RegistrationPCL<PointSource, PointTarget>::computeTransformation(PointCloud
     result_ = registration.align(target_proxy, source_proxy, *target_tree_, Eigen::Isometry3d(guess.template cast<double>()));
   } else if (registration_type_ == "VGICP") {
     if (!target_voxelmap_) {
-      target_voxelmap_ = std::make_shared<GaussianVoxelMap>(voxel_resolution_);
+      target_voxelmap_ = boost::make_shared<GaussianVoxelMap>(voxel_resolution_);
       target_voxelmap_->insert(target_proxy);
     }
     if (!source_voxelmap_) {
-      source_voxelmap_ = std::make_shared<GaussianVoxelMap>(voxel_resolution_);
+      source_voxelmap_ = boost::make_shared<GaussianVoxelMap>(voxel_resolution_);
       source_voxelmap_->insert(source_proxy);
     }
 

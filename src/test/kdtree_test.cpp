@@ -22,7 +22,7 @@ public:
   void SetUp() override {
     // Load points
     auto points_4f = read_ply("data/target.ply");
-    points = voxelgrid_sampling(*std::make_shared<PointCloud>(points_4f), 0.5);
+    points = voxelgrid_sampling(*boost::make_shared<PointCloud>(points_4f), 0.5);
     estimate_normals_covariances(*points);
 
     points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
@@ -168,36 +168,36 @@ INSTANTIATE_TEST_SUITE_P(KdTreeTest, KdTreeTest, testing::Values("SMALL", "TBB",
 
 // Check if kdtree works correctly for empty points
 TEST_P(KdTreeTest, EmptyTest) {
-  auto empty_points = std::make_shared<PointCloud>();
-  auto kdtree = std::make_shared<UnsafeKdTree<PointCloud>>(*empty_points);
+  auto empty_points = boost::make_shared<PointCloud>();
+  auto kdtree = boost::make_shared<UnsafeKdTree<PointCloud>>(*empty_points);
 
   auto empty_points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
-  auto kdtree_pcl = std::make_shared<UnsafeKdTree<pcl::PointCloud<pcl::PointXYZ>>>(*empty_points_pcl);
+  auto kdtree_pcl = boost::make_shared<UnsafeKdTree<pcl::PointCloud<pcl::PointXYZ>>>(*empty_points_pcl);
 }
 
 // Check if nearest neighbor search results are identical to those of brute force search
 TEST_P(KdTreeTest, KnnTest) {
   const auto method = GetParam();
   if (method == "SMALL") {
-    auto kdtree = std::make_shared<KdTree<PointCloud>>(points);
+    auto kdtree = boost::make_shared<KdTree<PointCloud>>(points);
     test_kdtree(*points, *kdtree);
 
-    auto kdtree_pcl = std::make_shared<KdTree<pcl::PointCloud<pcl::PointXYZ>>>(points_pcl);
+    auto kdtree_pcl = boost::make_shared<KdTree<pcl::PointCloud<pcl::PointXYZ>>>(points_pcl);
     test_kdtree(*points_pcl, *kdtree_pcl);
   } else if (method == "TBB") {
-    auto kdtree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderTBB());
+    auto kdtree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderTBB());
     test_kdtree(*points, *kdtree);
 
-    auto kdtree_pcl = std::make_shared<KdTree<pcl::PointCloud<pcl::PointXYZ>>>(points_pcl, KdTreeBuilderTBB());
+    auto kdtree_pcl = boost::make_shared<KdTree<pcl::PointCloud<pcl::PointXYZ>>>(points_pcl, KdTreeBuilderTBB());
     test_kdtree(*points_pcl, *kdtree_pcl);
   } else if (method == "OMP") {
-    auto kdtree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(4));
+    auto kdtree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(4));
     test_kdtree(*points, *kdtree);
 
-    auto kdtree_pcl = std::make_shared<KdTree<pcl::PointCloud<pcl::PointXYZ>>>(points_pcl, KdTreeBuilderOMP(4));
+    auto kdtree_pcl = boost::make_shared<KdTree<pcl::PointCloud<pcl::PointXYZ>>>(points_pcl, KdTreeBuilderOMP(4));
     test_kdtree(*points_pcl, *kdtree_pcl);
   } else if (method == "IVOX") {
-    auto voxelmap = std::make_shared<IncrementalVoxelMap<FlatContainerNormalCov>>(1.0);
+    auto voxelmap = boost::make_shared<IncrementalVoxelMap<FlatContainerNormalCov>>(1.0);
     voxelmap->insert(*points);
     test_voxelmap(*points, *voxelmap);
 
@@ -216,11 +216,11 @@ TEST_P(KdTreeTest, KnnTest) {
       EXPECT_NEAR((voxel_covs[i] - traits::cov(*voxelmap, indices[i])).squaredNorm(), 0.0, 1e-6);
     }
 
-    auto voxelmap_pcl = std::make_shared<IncrementalVoxelMap<FlatContainer<>>>(1.0);
+    auto voxelmap_pcl = boost::make_shared<IncrementalVoxelMap<FlatContainer<>>>(1.0);
     voxelmap_pcl->insert(*points_pcl);
     test_voxelmap(*points, *voxelmap_pcl);
   } else if (method == "GVOX") {
-    auto voxelmap = std::make_shared<GaussianVoxelMap>(1.0);
+    auto voxelmap = boost::make_shared<GaussianVoxelMap>(1.0);
     voxelmap->insert(*points);
     test_voxelmap(*points, *voxelmap);
 

@@ -151,10 +151,10 @@ public:
 template <typename PointCloud, typename Projection = EquirectangularProjection, typename BorderModeH = BorderRepeat, typename BorderModeV = BorderClamp>
 struct ProjectiveSearch {
 public:
-  using Ptr = std::shared_ptr<ProjectiveSearch<PointCloud, Projection>>;
-  using ConstPtr = std::shared_ptr<const ProjectiveSearch<PointCloud, Projection>>;
+  using Ptr = boost::shared_ptr<ProjectiveSearch<PointCloud, Projection>>;
+  using ConstPtr = boost::shared_ptr<const ProjectiveSearch<PointCloud, Projection>>;
 
-  explicit ProjectiveSearch(int width, int height, std::shared_ptr<const PointCloud> points) : points(points), search(width, height, *points) {}
+  explicit ProjectiveSearch(int width, int height, boost::shared_ptr<const PointCloud> points) : points(points), search(width, height, *points) {}
 
   /// @brief  Find k-nearest neighbors. This method uses dynamic memory allocation.
   /// @param  query       Query point
@@ -179,7 +179,7 @@ public:
   }
 
 public:
-  const std::shared_ptr<const PointCloud> points;                                         ///< Points
+  const boost::shared_ptr<const PointCloud> points;                                         ///< Points
   const UnsafeProjectiveSearch<PointCloud, Projection, BorderModeH, BorderModeV> search;  ///< Search
 };
 

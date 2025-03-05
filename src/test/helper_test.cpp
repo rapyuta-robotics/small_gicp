@@ -10,8 +10,8 @@ class HelperTest : public testing::Test, public testing::WithParamInterface<cons
 public:
   void SetUp() override {
     // Load points
-    target_raw = std::make_shared<PointCloud>(read_ply("data/target.ply"));
-    source_raw = std::make_shared<PointCloud>(read_ply("data/source.ply"));
+    target_raw = boost::make_shared<PointCloud>(read_ply("data/target.ply"));
+    source_raw = boost::make_shared<PointCloud>(read_ply("data/source.ply"));
 
     std::ifstream ifs("data/T_target_source.txt");
     if (!ifs) {
@@ -51,7 +51,7 @@ TEST_F(HelperTest, LoadCheck) {
 }
 
 TEST_F(HelperTest, EmptyPreprocess) {
-  auto empty_points = std::make_shared<PointCloud>();
+  auto empty_points = boost::make_shared<PointCloud>();
   auto [target, target_tree] = preprocess_points(*empty_points, 0.1, 10, 1);
   EXPECT_TRUE(target);
   EXPECT_TRUE(target_tree);
@@ -76,7 +76,7 @@ TEST_F(HelperTest, Preprocess) {
 }
 
 TEST_F(HelperTest, EmptyGaussianVoxelMap) {
-  auto empty_points = std::make_shared<PointCloud>();
+  auto empty_points = boost::make_shared<PointCloud>();
   auto voxelmap = create_gaussian_voxelmap(*empty_points, 0.1);
   EXPECT_TRUE(voxelmap);
   EXPECT_EQ(voxelmap->size(), 0);

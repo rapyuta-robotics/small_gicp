@@ -28,7 +28,7 @@ public:
     // Load points
     const double downsampling_resolution = 0.3;
 
-    target = std::make_shared<PointCloud>(read_ply("data/target.ply"));
+    target = boost::make_shared<PointCloud>(read_ply("data/target.ply"));
     target = voxelgrid_sampling(*target, downsampling_resolution);
     estimate_normals_covariances_omp(*target);
 
@@ -39,7 +39,7 @@ public:
     }
     estimate_normals_covariances_omp(*target_pcl);
 
-    source = std::make_shared<PointCloud>(read_ply("data/source.ply"));
+    source = boost::make_shared<PointCloud>(read_ply("data/source.ply"));
     source = voxelgrid_sampling(*source, downsampling_resolution);
     estimate_normals_covariances_omp(*source);
 
@@ -50,11 +50,11 @@ public:
     }
     estimate_normals_covariances_omp(*source_pcl);
 
-    target_tree = std::make_shared<KdTree<PointCloud>>(target);
-    source_tree = std::make_shared<KdTree<PointCloud>>(source);
-    target_voxelmap = std::make_shared<GaussianVoxelMap>(1.0);
+    target_tree = boost::make_shared<KdTree<PointCloud>>(target);
+    source_tree = boost::make_shared<KdTree<PointCloud>>(source);
+    target_voxelmap = boost::make_shared<GaussianVoxelMap>(1.0);
     target_voxelmap->insert(*target);
-    source_voxelmap = std::make_shared<GaussianVoxelMap>(1.0);
+    source_voxelmap = boost::make_shared<GaussianVoxelMap>(1.0);
     source_voxelmap->insert(*source);
 
     std::mt19937 mt;
@@ -80,7 +80,7 @@ public:
 
       const Eigen::Isometry3d T_shifted_source = T_source_shifted[i].inverse();
 
-      shifted[i] = std::make_shared<PointCloud>(source->points);
+      shifted[i] = boost::make_shared<PointCloud>(source->points);
       std::transform(source->points.begin(), source->points.end(), shifted[i]->points.begin(), [&](const auto& p) -> Eigen::Vector4d { return T_shifted_source * p; });
       estimate_normals_covariances_omp(*shifted[i]);
     }

@@ -23,9 +23,9 @@ namespace small_gicp {
 /// @param leaf_size  Downsampling resolution
 /// @return           Downsampled points
 template <typename InputPointCloud, typename OutputPointCloud = InputPointCloud>
-std::shared_ptr<OutputPointCloud> voxelgrid_sampling_omp(const InputPointCloud& points, double leaf_size, int num_threads = 4) {
+boost::shared_ptr<OutputPointCloud> voxelgrid_sampling_omp(const InputPointCloud& points, double leaf_size, int num_threads = 4) {
   if (traits::size(points) == 0) {
-    return std::make_shared<OutputPointCloud>();
+    return boost::make_shared<OutputPointCloud>();
   }
 
   const double inv_leaf_size = 1.0 / leaf_size;
@@ -55,7 +55,7 @@ std::shared_ptr<OutputPointCloud> voxelgrid_sampling_omp(const InputPointCloud& 
   // Sort by voxel coords
   quick_sort_omp(coord_pt.begin(), coord_pt.end(), [](const auto& lhs, const auto& rhs) { return lhs.first < rhs.first; }, num_threads);
 
-  auto downsampled = std::make_shared<OutputPointCloud>();
+  auto downsampled = boost::make_shared<OutputPointCloud>();
   traits::resize(*downsampled, traits::size(points));
 
   // Take block-wise sum

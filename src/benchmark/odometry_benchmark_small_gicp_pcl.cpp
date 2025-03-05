@@ -58,7 +58,7 @@ private:
 };
 
 static auto small_gicp_pcl_registry =
-  register_odometry("small_gicp_pcl", [](const OdometryEstimationParams& params) { return std::make_shared<SmallGICPPCLOdometryEstimation>(params); });
+  register_odometry("small_gicp_pcl", [](const OdometryEstimationParams& params) { return boost::make_shared<SmallGICPPCLOdometryEstimation>(params); });
 
 }  // namespace small_gicp
 

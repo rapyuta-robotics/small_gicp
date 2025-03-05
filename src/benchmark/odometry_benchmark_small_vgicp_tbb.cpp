@@ -25,7 +25,7 @@ public:
 
     estimate_covariances_tbb(*points, params.num_neighbors);
 
-    auto voxelmap = std::make_shared<GaussianVoxelMap>(params.voxel_resolution);
+    auto voxelmap = boost::make_shared<GaussianVoxelMap>(params.voxel_resolution);
     voxelmap->insert(*points);
 
     if (target_points == nullptr) {
@@ -66,7 +66,7 @@ private:
 };
 
 static auto small_gicp_tbb_registry =
-  register_odometry("small_vgicp_tbb", [](const OdometryEstimationParams& params) { return std::make_shared<SmallVGICPOnlineOdometryEstimationTBB>(params); });
+  register_odometry("small_vgicp_tbb", [](const OdometryEstimationParams& params) { return boost::make_shared<SmallVGICPOnlineOdometryEstimationTBB>(params); });
 
 }  // namespace small_gicp
 

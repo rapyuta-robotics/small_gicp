@@ -23,7 +23,7 @@ public:
 
     if (voxelmap == nullptr) {
       // This is the very first frame
-      voxelmap = std::make_shared<IncrementalVoxelMap<FlatContainerCov>>(params.voxel_resolution);
+      voxelmap = boost::make_shared<IncrementalVoxelMap<FlatContainerCov>>(params.voxel_resolution);
       voxelmap->insert(*points);
       return T_world_lidar;
     }
@@ -61,6 +61,6 @@ private:
 };
 
 static auto small_gicp_model_omp_registry =
-  register_odometry("small_gicp_model_omp", [](const OdometryEstimationParams& params) { return std::make_shared<SmallGICPModelOnlineOdometryEstimationOMP>(params); });
+  register_odometry("small_gicp_model_omp", [](const OdometryEstimationParams& params) { return boost::make_shared<SmallGICPModelOnlineOdometryEstimationOMP>(params); });
 
 }  // namespace small_gicp

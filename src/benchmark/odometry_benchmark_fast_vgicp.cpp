@@ -62,7 +62,7 @@ private:
   Eigen::Isometry3d T;
 };
 
-static auto fast_vgicp_registry = register_odometry("fast_vgicp", [](const OdometryEstimationParams& params) { return std::make_shared<FastVGICPOdometryEstimation>(params); });
+static auto fast_vgicp_registry = register_odometry("fast_vgicp", [](const OdometryEstimationParams& params) { return boost::make_shared<FastVGICPOdometryEstimation>(params); });
 
 }  // namespace small_gicp
 

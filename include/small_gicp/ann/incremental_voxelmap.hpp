@@ -37,8 +37,8 @@ public:
 template <typename VoxelContents>
 struct IncrementalVoxelMap {
 public:
-  using Ptr = std::shared_ptr<IncrementalVoxelMap>;
-  using ConstPtr = std::shared_ptr<const IncrementalVoxelMap>;
+  using Ptr = boost::shared_ptr<IncrementalVoxelMap>;
+  using ConstPtr = boost::shared_ptr<const IncrementalVoxelMap>;
 
   /// @brief Constructor.
   /// @param leaf_size  Voxel size
@@ -59,7 +59,7 @@ public:
 
       auto found = voxels.find(coord);
       if (found == voxels.end()) {
-        auto voxel = std::make_shared<std::pair<VoxelInfo, VoxelContents>>(VoxelInfo(coord, lru_counter), VoxelContents());
+        auto voxel = boost::make_shared<std::pair<VoxelInfo, VoxelContents>>(VoxelInfo(coord, lru_counter), VoxelContents());
 
         found = voxels.emplace_hint(found, coord, flat_voxels.size());
         flat_voxels.emplace_back(voxel);
@@ -72,7 +72,7 @@ public:
 
     if ((++lru_counter) % lru_clear_cycle == 0) {
       // Remove least recently used voxels
-      auto remove_counter = std::remove_if(flat_voxels.begin(), flat_voxels.end(), [&](const std::shared_ptr<std::pair<VoxelInfo, VoxelContents>>& voxel) {
+      auto remove_counter = std::remove_if(flat_voxels.begin(), flat_voxels.end(), [&](const boost::shared_ptr<std::pair<VoxelInfo, VoxelContents>>& voxel) {
         return voxel->first.lru + lru_horizon < lru_counter;
       });
       flat_voxels.erase(remove_counter, flat_voxels.end());
@@ -197,7 +197,7 @@ public:
   std::vector<Eigen::Vector3i> search_offsets;  ///< Voxel search offsets.
 
   typename VoxelContents::Setting voxel_setting;                                  ///< Voxel setting.
-  std::vector<std::shared_ptr<std::pair<VoxelInfo, VoxelContents>>> flat_voxels;  ///< Voxel contents.
+  std::vector<boost::shared_ptr<std::pair<VoxelInfo, VoxelContents>>> flat_voxels;  ///< Voxel contents.
   std::unordered_map<Eigen::Vector3i, size_t, XORVector3iHash> voxels;            ///< Voxel index map.
 };
 

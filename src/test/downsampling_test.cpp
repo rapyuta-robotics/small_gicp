@@ -20,7 +20,7 @@ public:
   void SetUp() override {
     // Load points
     auto points_4f = read_ply("data/target.ply");
-    points = std::make_shared<PointCloud>(points_4f);
+    points = boost::make_shared<PointCloud>(points_4f);
     points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
     points_pcl->resize(points_4f.size());
     for (size_t i = 0; i < points_4f.size(); i++) {
@@ -42,7 +42,7 @@ public:
 
   // Apply downsampling
   template <typename PointCloud>
-  std::shared_ptr<PointCloud> downsample(const PointCloud& points, double resolution) {
+  boost::shared_ptr<PointCloud> downsample(const PointCloud& points, double resolution) {
     const std::string method = GetParam();
     if (method == "SMALL") {
       return voxelgrid_sampling(points, resolution);
@@ -75,7 +75,7 @@ INSTANTIATE_TEST_SUITE_P(DownsamplingTest, DownsamplingTest, testing::Values("SM
 
 // Check if downsampling works correctly for empty points
 TEST_P(DownsamplingTest, EmptyTest) {
-  auto empty_points = std::make_shared<PointCloud>();
+  auto empty_points = boost::make_shared<PointCloud>();
   auto empty_downsampled = downsample(*empty_points, 0.1);
   EXPECT_TRUE(empty_downsampled);
   EXPECT_EQ(empty_downsampled->size(), 0) << "Empty test small: " + GetParam();
@@ -101,7 +101,7 @@ TEST_P(DownsamplingTest, DownsampleTest) {
 TEST_P(DownsamplingTest, EmptyRandamSamplingTest) {
   std::mt19937 mt;
 
-  auto empty_points = std::make_shared<PointCloud>();
+  auto empty_points = boost::make_shared<PointCloud>();
   auto empty_downsampled = random_sampling(*empty_points, 1000, mt);
   EXPECT_TRUE(empty_downsampled);
   EXPECT_EQ(empty_downsampled->size(), 0) << "Empty test small: " + GetParam();

@@ -23,7 +23,7 @@ public:
     Stopwatch sw;
     sw.start();
 
-    auto tree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderTBB());
+    auto tree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderTBB());
     estimate_covariances_tbb(*points, *tree, params.num_neighbors);
 
     if (target_points == nullptr) {
@@ -63,7 +63,7 @@ private:
 };
 
 static auto small_gicp_tbb_registry =
-  register_odometry("small_gicp_tbb", [](const OdometryEstimationParams& params) { return std::make_shared<SmallGICPOnlineOdometryEstimationTBB>(params); });
+  register_odometry("small_gicp_tbb", [](const OdometryEstimationParams& params) { return boost::make_shared<SmallGICPOnlineOdometryEstimationTBB>(params); });
 
 }  // namespace small_gicp
 

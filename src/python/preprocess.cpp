@@ -62,7 +62,7 @@ void define_preprocess(py::module& m) {
   // voxelgrid_sampling (numpy)
   m.def(
     "voxelgrid_sampling",
-    [](const Eigen::MatrixXd& points, double resolution, int num_threads) -> std::shared_ptr<PointCloud> {
+    [](const Eigen::MatrixXd& points, double resolution, int num_threads) -> boost::shared_ptr<PointCloud> {
       if (points.cols() != 3 && points.cols() != 4) {
         std::cerr << "points must be Nx3 or Nx4" << std::endl;
         return nullptr;
@@ -107,9 +107,9 @@ void define_preprocess(py::module& m) {
   // estimate_normals
   m.def(
     "estimate_normals",
-    [](PointCloud::Ptr points, std::shared_ptr<KdTree<PointCloud>> tree, int num_neighbors, int num_threads) {
+    [](PointCloud::Ptr points, boost::shared_ptr<KdTree<PointCloud>> tree, int num_neighbors, int num_threads) {
       if (tree == nullptr) {
-        tree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
+        tree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
       }
 
       if (num_threads == 1) {
@@ -141,9 +141,9 @@ void define_preprocess(py::module& m) {
   // estimate_covariances
   m.def(
     "estimate_covariances",
-    [](PointCloud::Ptr points, std::shared_ptr<KdTree<PointCloud>> tree, int num_neighbors, int num_threads) {
+    [](PointCloud::Ptr points, boost::shared_ptr<KdTree<PointCloud>> tree, int num_neighbors, int num_threads) {
       if (tree == nullptr) {
-        tree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
+        tree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
       }
 
       if (num_threads == 1) {
@@ -175,9 +175,9 @@ void define_preprocess(py::module& m) {
   // estimate_normals_covariances
   m.def(
     "estimate_normals_covariances",
-    [](PointCloud::Ptr points, std::shared_ptr<KdTree<PointCloud>> tree, int num_neighbors, int num_threads) {
+    [](PointCloud::Ptr points, boost::shared_ptr<KdTree<PointCloud>> tree, int num_neighbors, int num_threads) {
       if (tree == nullptr) {
-        tree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
+        tree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(num_threads));
       }
 
       if (num_threads == 1) {
@@ -215,7 +215,7 @@ void define_preprocess(py::module& m) {
         return {nullptr, nullptr};
       }
 
-      auto points = std::make_shared<PointCloud>();
+      auto points = boost::make_shared<PointCloud>();
       points->resize(points_numpy.rows());
       for (size_t i = 0; i < points_numpy.rows(); i++) {
         if (points_numpy.cols() == 3) {
@@ -226,7 +226,7 @@ void define_preprocess(py::module& m) {
       }
 
       auto downsampled = voxelgrid_sampling_omp(*points, downsampling_resolution, num_threads);
-      auto kdtree = std::make_shared<KdTree<PointCloud>>(downsampled, KdTreeBuilderOMP(num_threads));
+      auto kdtree = boost::make_shared<KdTree<PointCloud>>(downsampled, KdTreeBuilderOMP(num_threads));
       estimate_normals_covariances_omp(*downsampled, *kdtree, num_neighbors, num_threads);
       return {downsampled, kdtree};
     },
@@ -267,7 +267,7 @@ void define_preprocess(py::module& m) {
       }
 
       auto downsampled = voxelgrid_sampling_omp(points, downsampling_resolution, num_threads);
-      auto kdtree = std::make_shared<KdTree<PointCloud>>(downsampled, KdTreeBuilderOMP(num_threads));
+      auto kdtree = boost::make_shared<KdTree<PointCloud>>(downsampled, KdTreeBuilderOMP(num_threads));
       estimate_normals_covariances_omp(*downsampled, *kdtree, num_neighbors, num_threads);
       return {downsampled, kdtree};
     },

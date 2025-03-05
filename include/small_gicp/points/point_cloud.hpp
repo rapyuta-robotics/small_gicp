@@ -14,8 +14,8 @@ namespace small_gicp {
  */
 struct PointCloud {
 public:
-  using Ptr = std::shared_ptr<PointCloud>;
-  using ConstPtr = std::shared_ptr<const PointCloud>;
+  using Ptr = boost::shared_ptr<PointCloud>;
+  using ConstPtr = boost::shared_ptr<const PointCloud>;
 
   /// @brief Constructor
   PointCloud() {}

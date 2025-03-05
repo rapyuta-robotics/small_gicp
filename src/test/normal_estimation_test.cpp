@@ -18,11 +18,11 @@ using namespace small_gicp;
 class NormalEstimationTest : public testing::Test {
 public:
   void SetUp() override {
-    points = std::make_shared<PointCloud>(read_ply("data/target.ply"));
+    points = boost::make_shared<PointCloud>(read_ply("data/target.ply"));
     points = voxelgrid_sampling(*points, 0.25);
     estimate_normals_covariances(*points, num_neighbors);
 
-    tree = std::make_shared<KdTree<PointCloud>>(points);
+    tree = boost::make_shared<KdTree<PointCloud>>(points);
 
     points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointNormal>>();
     points_pcl->resize(points->size());
@@ -93,8 +93,8 @@ TEST_F(NormalEstimationTest, LoadCheck) {
 // Empty test
 TEST_F(NormalEstimationTest, EmptyTest) {
   // Empty point cloud
-  auto empty_points = std::make_shared<PointCloud>();
-  auto empty_tree = std::make_shared<KdTree<PointCloud>>(empty_points);
+  auto empty_points = boost::make_shared<PointCloud>();
+  auto empty_tree = boost::make_shared<KdTree<PointCloud>>(empty_points);
 
   estimate_normals(*empty_points, *empty_tree, num_neighbors);
   EXPECT_TRUE(empty_points->empty());
@@ -105,7 +105,7 @@ TEST_F(NormalEstimationTest, EmptyTest) {
 
   // Empty point cloud (PCL)
   auto empty_points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointNormalCovariance>>();
-  auto empty_tree_pcl = std::make_shared<KdTree<pcl::PointCloud<pcl::PointNormalCovariance>>>(empty_points_pcl);
+  auto empty_tree_pcl = boost::make_shared<KdTree<pcl::PointCloud<pcl::PointNormalCovariance>>>(empty_points_pcl);
 
   estimate_normals(*empty_points_pcl, *empty_tree_pcl, num_neighbors);
   EXPECT_TRUE(empty_points_pcl->empty());
@@ -118,8 +118,8 @@ TEST_F(NormalEstimationTest, EmptyTest) {
 // Empty test (TBB)
 TEST_F(NormalEstimationTest, EmptyTestTBB) {
   // Empty point cloud
-  auto empty_points = std::make_shared<PointCloud>();
-  auto empty_tree = std::make_shared<KdTree<PointCloud>>(empty_points);
+  auto empty_points = boost::make_shared<PointCloud>();
+  auto empty_tree = boost::make_shared<KdTree<PointCloud>>(empty_points);
 
   estimate_normals_tbb(*empty_points, *empty_tree, num_neighbors);
   EXPECT_TRUE(empty_points->empty());
@@ -130,7 +130,7 @@ TEST_F(NormalEstimationTest, EmptyTestTBB) {
 
   // Empty point cloud (PCL)
   auto empty_points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointNormalCovariance>>();
-  auto empty_tree_pcl = std::make_shared<KdTree<pcl::PointCloud<pcl::PointNormalCovariance>>>(empty_points_pcl);
+  auto empty_tree_pcl = boost::make_shared<KdTree<pcl::PointCloud<pcl::PointNormalCovariance>>>(empty_points_pcl);
 
   estimate_normals_tbb(*empty_points_pcl, *empty_tree_pcl, num_neighbors);
   EXPECT_TRUE(empty_points_pcl->empty());
@@ -143,8 +143,8 @@ TEST_F(NormalEstimationTest, EmptyTestTBB) {
 // Empty test (OMP)
 TEST_F(NormalEstimationTest, EmptyTestOMP) {
   // Empty point cloud
-  auto empty_points = std::make_shared<PointCloud>();
-  auto empty_tree = std::make_shared<KdTree<PointCloud>>(empty_points);
+  auto empty_points = boost::make_shared<PointCloud>();
+  auto empty_tree = boost::make_shared<KdTree<PointCloud>>(empty_points);
 
   estimate_normals_omp(*empty_points, *empty_tree, num_neighbors, 2);
   EXPECT_TRUE(empty_points->empty());
@@ -155,7 +155,7 @@ TEST_F(NormalEstimationTest, EmptyTestOMP) {
 
   // Empty point cloud (PCL)
   auto empty_points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointNormalCovariance>>();
-  auto empty_tree_pcl = std::make_shared<KdTree<pcl::PointCloud<pcl::PointNormalCovariance>>>(empty_points_pcl);
+  auto empty_tree_pcl = boost::make_shared<KdTree<pcl::PointCloud<pcl::PointNormalCovariance>>>(empty_points_pcl);
 
   estimate_normals_omp(*empty_points_pcl, *empty_tree_pcl, num_neighbors, 2);
   EXPECT_TRUE(empty_points_pcl->empty());
@@ -167,7 +167,7 @@ TEST_F(NormalEstimationTest, EmptyTestOMP) {
 
 // Normal/covariance estimation test
 TEST_F(NormalEstimationTest, NormalEstimationTest) {
-  auto estimated = std::make_shared<PointCloud>();
+  auto estimated = boost::make_shared<PointCloud>();
   *estimated = *points;
 
   estimate_normals(*estimated, *tree, num_neighbors);
@@ -184,7 +184,7 @@ TEST_F(NormalEstimationTest, NormalEstimationTest) {
 
 // Normal/covariance estimation test (TBB)
 TEST_F(NormalEstimationTest, NormalEstimationTestTBB) {
-  auto estimated = std::make_shared<PointCloud>();
+  auto estimated = boost::make_shared<PointCloud>();
   *estimated = *points;
 
   estimate_normals_tbb(*estimated, *tree, num_neighbors);
@@ -201,7 +201,7 @@ TEST_F(NormalEstimationTest, NormalEstimationTestTBB) {
 
 // Normal/covariance estimation test (OMP)
 TEST_F(NormalEstimationTest, NormalEstimationTestOMP) {
-  auto estimated = std::make_shared<PointCloud>();
+  auto estimated = boost::make_shared<PointCloud>();
   *estimated = *points;
 
   estimate_normals_omp(*estimated, *tree, num_neighbors, 2);

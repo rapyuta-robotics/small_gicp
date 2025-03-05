@@ -48,7 +48,7 @@ TEST(PointsTest, PointsTest) {
   std::vector<Eigen::Vector4d> src_points(100);
   std::generate(src_points.begin(), src_points.end(), [&] { return Eigen::Vector4d(dist(mt), dist(mt), dist(mt), 1.0); });
 
-  auto points = std::make_shared<PointCloud>(src_points);
+  auto points = boost::make_shared<PointCloud>(src_points);
   test_points(src_points, *points, mt);
 
   auto points_pcl = pcl::make_shared<pcl::PointCloud<pcl::PointNormalCovariance>>();

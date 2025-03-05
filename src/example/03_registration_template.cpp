@@ -25,16 +25,16 @@ void example1(const std::vector<Eigen::Vector4f>& target_points, const std::vect
   double max_correspondence_distance = 1.0;  // Maximum correspondence distance between points (e.g., triming threshold)
 
   // Convert to small_gicp::PointCloud
-  auto target = std::make_shared<PointCloud>(target_points);
-  auto source = std::make_shared<PointCloud>(source_points);
+  auto target = boost::make_shared<PointCloud>(target_points);
+  auto source = boost::make_shared<PointCloud>(source_points);
 
   // Downsampling
   target = voxelgrid_sampling_omp(*target, downsampling_resolution, num_threads);
   source = voxelgrid_sampling_omp(*source, downsampling_resolution, num_threads);
 
   // Create KdTree
-  auto target_tree = std::make_shared<KdTree<PointCloud>>(target, KdTreeBuilderOMP(num_threads));
-  auto source_tree = std::make_shared<KdTree<PointCloud>>(source, KdTreeBuilderOMP(num_threads));
+  auto target_tree = boost::make_shared<KdTree<PointCloud>>(target, KdTreeBuilderOMP(num_threads));
+  auto source_tree = boost::make_shared<KdTree<PointCloud>>(source, KdTreeBuilderOMP(num_threads));
 
   // Estimate point covariances
   estimate_covariances_omp(*target, *target_tree, num_neighbors, num_threads);
@@ -118,7 +118,7 @@ struct Traits<MyPointCloud> {
 /// @brief Custom nearest neighbor search with brute force search. (Do not use this in practical applications)
 struct MyNearestNeighborSearch {
 public:
-  MyNearestNeighborSearch(const std::shared_ptr<MyPointCloud>& points) : points(points) {}
+  MyNearestNeighborSearch(const boost::shared_ptr<MyPointCloud>& points) : points(points) {}
 
   size_t knn_search(const Eigen::Vector4d& pt, int k, size_t* k_indices, double* k_sq_dists) const {
     // Priority queue to hold top-k neighbors
@@ -145,7 +145,7 @@ public:
     return n;
   }
 
-  std::shared_ptr<MyPointCloud> points;
+  boost::shared_ptr<MyPointCloud> points;
 };
 
 // Define traits for MyNearestNeighborSearch so that it can be fed to small_gicp algorithms.
@@ -262,13 +262,13 @@ void example2(const std::vector<Eigen::Vector4f>& target_points, const std::vect
   double max_correspondence_distance = 1.0;  // Maximum correspondence distance between points (e.g., triming threshold)
 
   // Convert to MyPointCloud
-  std::shared_ptr<MyPointCloud> target = std::make_shared<MyPointCloud>();
+  boost::shared_ptr<MyPointCloud> target = boost::make_shared<MyPointCloud>();
   target->resize(target_points.size());
   for (size_t i = 0; i < target_points.size(); i++) {
     Eigen::Map<Eigen::Vector3d>(target->at(i).point.data()) = target_points[i].head<3>().cast<double>();
   }
 
-  std::shared_ptr<MyPointCloud> source = std::make_shared<MyPointCloud>();
+  boost::shared_ptr<MyPointCloud> source = boost::make_shared<MyPointCloud>();
   source->resize(source_points.size());
   for (size_t i = 0; i < source_points.size(); i++) {
     Eigen::Map<Eigen::Vector3d>(source->at(i).point.data()) = source_points[i].head<3>().cast<double>();
@@ -279,8 +279,8 @@ void example2(const std::vector<Eigen::Vector4f>& target_points, const std::vect
   source = voxelgrid_sampling_omp(*source, downsampling_resolution, num_threads);
 
   // Create nearest neighbor search
-  auto target_search = std::make_shared<MyNearestNeighborSearch>(target);
-  auto source_search = std::make_shared<MyNearestNeighborSearch>(target);
+  auto target_search = boost::make_shared<MyNearestNeighborSearch>(target);
+  auto source_search = boost::make_shared<MyNearestNeighborSearch>(target);
 
   // Estimate point normals
   // You can use your custom nearest neighbor search here!

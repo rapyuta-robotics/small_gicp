@@ -19,7 +19,7 @@ public:
 
     // Preprocess input points (kdtree construction & covariance estimation)
     // Note that input points here is already downsampled
-    auto tree = std::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(params.num_threads));
+    auto tree = boost::make_shared<KdTree<PointCloud>>(points, KdTreeBuilderOMP(params.num_threads));
     estimate_covariances_omp(*points, *tree, params.num_neighbors, params.num_threads);
 
     if (target_points == nullptr) {
@@ -62,6 +62,6 @@ private:
 };
 
 static auto small_gicp_omp_registry =
-  register_odometry("small_gicp_omp", [](const OdometryEstimationParams& params) { return std::make_shared<SmallGICPOnlineOdometryEstimationOMP>(params); });
+  register_odometry("small_gicp_omp", [](const OdometryEstimationParams& params) { return boost::make_shared<SmallGICPOnlineOdometryEstimationOMP>(params); });
 
 }  // namespace small_gicp
