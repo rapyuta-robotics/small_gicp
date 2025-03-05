@@ -8,7 +8,7 @@
   <maintainer email="k.koide@aist.go.jp">Kenji Koide</maintainer>
   <license>MIT</license>
 
-  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
   <depend>eigen</depend>
   <depend>libomp-dev</depend>
 
